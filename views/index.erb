@@ -9,8 +9,8 @@
   <% @contacts.each do |contact| %>
     <tr>
       <td><%= contact['name'] %></td>
-      <td><a href='/contacts/<%= contact['name'] %>/edit'>Edit</a></td>
-      <td><a href='/contacts/<%= contact['name'] %>/delete'>Delete</a></td>
+      <td><a href='/contacts/<%= contact['name'].gsub(' ','%20') %>/edit'>Edit</a></td>
+      <td><a href='/contacts/<%= contact['name'].gsub(' ','%20') %>/delete'>Delete</a></td>
     </tr>
   <% end %>
 </table>

@@ -42,15 +42,15 @@ class AppTest < MiniTest::Test
     get '/'
 
     assert_equal 200, last_response.status
-    assert_includes last_response.body, '/Chris Uppen'
+    assert_includes last_response.body, '/Chris%20Uppen'
   end
 
   ## Show
   def test_contact_show
-    get '/contacts/Johnny'
+    get '/contacts/Chris%20Uppen'
 
     assert_equal 200, last_response.status
-    assert_includes last_response.body, 'Johnny'
+    assert_includes last_response.body, 'Chris'
   end
 
   ## New
