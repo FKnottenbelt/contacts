@@ -1,0 +1,8 @@
+<form action='/contacts/<%= @contact %>' method='post'>
+  <input name='_method' type='hidden' value='put'>
+  <label for='name'>Name</label>
+  <input name='name' value='<%= @contact %>'>
+  <button type='submit' name='submit'>Submit</button>
+</form>
+
+<a href='/contacts'>Back</a>

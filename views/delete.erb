@@ -1,0 +1,8 @@
+Do you really want to remove the contact <%= @contact %>?
+
+<form action='/contacts/<%= @contact %>' method='post'>
+  <input name='_method' type='hidden' value='delete'>
+  <button type='submit' name='submit'>Remove contact</button>
+</form>
+
+<a href='/contacts'>Cancel</a>

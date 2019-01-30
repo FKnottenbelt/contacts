@@ -1,0 +1,7 @@
+contacts:
+ - name: 'Chris Uppen'
+   phone: '1234567890'
+   email: 'chris.uppen@mymail.com'
+ - name: 'Christina Uppen'
+   phone: '2234567890'
+   email: 'christina.uppen@mymail.com'

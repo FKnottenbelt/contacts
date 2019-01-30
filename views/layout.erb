@@ -1,0 +1,13 @@
+<DOCTYPE! html>
+<html>
+  <head>
+  </head>
+    <% if session[:message] %>
+      <%= session.delete(:message) %>
+    <% end %>
+    <body>
+
+      <%== yield %>
+
+    </body>
+</html>

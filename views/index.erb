@@ -1,0 +1,18 @@
+<h1>Your contacts:</h1>
+
+<table border=1>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+  </tr>
+  <% @contacts.each do |contact| %>
+    <tr>
+      <td><%= contact['name'] %></td>
+      <td><a href='/contacts/<%= contact['name'] %>/edit'>Edit</a></td>
+      <td><a href='/contacts/<%= contact['name'] %>/delete'>Delete</a></td>
+    </tr>
+  <% end %>
+</table>
+
+<a href='/contacts/new'>New contact</a>
