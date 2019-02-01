@@ -1,5 +1,16 @@
-<p>Hi there <%= @name %>!</p>
-<a href='/contacts/<%= @name %>/edit'>Edit</a>
-<a href='/contacts/<%= @name %>/delete'>Delete</a>
+<form action='/contacts/<%= @contact %>' method='post'>
+  <input name='_method' type='hidden' value='put'>
+
+  <label for='name'>Name</label>
+  <input name='name' value='<%= @contact %>'><br><br>
+
+  <label for='phone'>Phone</label>
+  <input name='phone' value="<%= @contact_info['phone'].to_s %>"><br><br>
+
+  <label for='email'>Email</label>
+  <input name='email' value="<%= @contact_info['email'] %>"><br><br>
+
+</form>
 
 <a href='/contacts'>Back</a>
+<a href='/contacts/<%= @contact.gsub(' ','%20') %>/edit'>Edit</a>

@@ -30,6 +30,10 @@ def load_contacts
   contacts['contacts']
 end
 
+def get_contact_details(contact)
+  @contacts.select{ |person| person['name'] == contact }.first
+end
+
 def write_to_contacts_file(new_content)
   contacts_file = File.join(data_path, 'contacts.yml')
   File.write(contacts_file, new_content, mode: 'w')
@@ -104,13 +108,17 @@ end
 
 # Show: show individual contact
 get '/contacts/:name' do
-  @name = params[:name]
+  @contact = params[:name]
+  @contact_info = get_contact_details(@contact)
+
   erb :show
 end
 
 # Edit: get contact edit page
 get '/contacts/:name/edit' do
   @contact = params[:name]
+  @contact_info = get_contact_details(@contact)
+
   erb :edit
 end
 

@@ -51,6 +51,7 @@ class AppTest < MiniTest::Test
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'Chris'
+    assert_includes last_response.body, '1234567890'
   end
 
   ## New
@@ -81,11 +82,11 @@ class AppTest < MiniTest::Test
 
   ## Edit
   def test_contact_edit
-    skip
-    get '/contacts/Johnny/edit'
+    get '/contacts/Chris%20Uppen/edit'
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'Submit'
+    assert_includes last_response.body, '1234567890'
   end
 
   ## Update

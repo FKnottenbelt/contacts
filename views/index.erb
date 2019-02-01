@@ -1,14 +1,16 @@
 <h1>Your contacts:</h1>
 
-<table border=1>
+<table>
   <tr>
     <th>Name</th>
+    <th></th>
     <th></th>
     <th></th>
   </tr>
   <% @contacts.each do |contact| %>
     <tr>
       <td><%= contact['name'] %></td>
+      <td><a href='/contacts/<%= contact['name'].gsub(' ','%20') %>'>Select</a></td>
       <td><a href='/contacts/<%= contact['name'].gsub(' ','%20') %>/edit'>Edit</a></td>
       <td><a href='/contacts/<%= contact['name'].gsub(' ','%20') %>/delete'>Delete</a></td>
     </tr>

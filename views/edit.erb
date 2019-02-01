@@ -1,7 +1,15 @@
 <form action='/contacts/<%= @contact %>' method='post'>
   <input name='_method' type='hidden' value='put'>
+
   <label for='name'>Name</label>
-  <input name='name' value='<%= @contact %>'>
+  <input name='name' value='<%= @contact %>'><br><br>
+
+  <label for='phone'>Phone</label>
+  <input name='phone' value="<%= @contact_info['phone'] %>"><br><br>
+
+  <label for='email'>Email</label>
+  <input name='email' value="<%= @contact_info['email'] %>"><br><br>
+
   <button type='submit' name='submit'>Submit</button>
 </form>
 

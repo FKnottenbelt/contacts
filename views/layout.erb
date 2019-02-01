@@ -1,9 +1,21 @@
 <DOCTYPE! html>
 <html>
   <head>
+    <style>
+      table, td, th {
+        border: 1px solid black;
+      }
+
+      .message {
+        padding: 10 20;
+        background-color: lightblue;
+      }
+    </style>
   </head>
     <% if session[:message] %>
-      <%= session.delete(:message) %>
+      <div class='message'>
+        <%= session.delete(:message) %>
+      </div>
     <% end %>
     <body>
 
