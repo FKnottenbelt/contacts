@@ -91,11 +91,11 @@ class AppTest < MiniTest::Test
 
   ## Update
   def test_contact_update_valid_name
-    skip
-    put '/contacts/Johnny', name: 'Johannes'
+    put '/contacts/Chris%20Uppen', phone: '1234567891'
 
     assert_equal 302, last_response.status
-    assert_equal "Changed name to: Johannes", session[:message]
+    assert_equal "Updated contact info for Chris Uppen", session[:message]
+    assert_includes last_response.body, '1234567891'
   end
 
   def test_contact_update_invalid_name_fails
