@@ -6,6 +6,8 @@ require 'bundler/setup'
 require 'pry'
 require 'yaml'
 
+INPUT_FIELDS = %w(name phone email).freeze
+
 configure do
   enable :sessions
   set :session_secret, 'secret'
@@ -18,7 +20,7 @@ before do
 end
 
 def data_path
-  if ENV['RACK_EN'] == 'test'
+  if ENV['RACK_ENV'] == 'test'
     File.expand_path('../test/data', __FILE__)
   else
     File.expand_path('../data', __FILE__)
@@ -35,10 +37,12 @@ def get_contact_details(contact)
   @contacts.select { |person| person['name'] == contact }.first
 end
 
-# def write_to_contacts_file(new_content)
-#   contacts_file = File.join(data_path, 'contacts.yml')
-#   File.write(contacts_file, new_content, mode: 'w')
-# end
+def write_to_contacts_file(new_content)
+  contacts_file = File.join(data_path, 'contacts.yml')
+  contacts = YAML.load_file(contacts_file)
+  contacts['contacts'] = new_content
+  File.write(contacts_file, contacts.to_yaml, mode: 'w')
+end
 
 # def valid_name?(name)
 #   !(name.to_s.empty?  || @contacts.include?(name) ||
@@ -53,7 +57,7 @@ end
 #   end
 # end
 
-# def edit_contact(old_name, new_name)
+# def edit_contact(old_name, new_name) VERVANGEN
 #   contacts = load_contacts
 
 #   new_content = contacts.map do |name|
@@ -78,6 +82,7 @@ end
 
 # Index: Display all contacts
 get '/' do
+  session.clear
   erb :index
 end
 
@@ -124,7 +129,6 @@ get '/contacts/:name/edit' do
 end
 
 ####  Field validation
-INPUT_FIELDS = %w(name phone email).freeze
 
 def validate_contact_info(info)
   INPUT_FIELDS.each do |field|
@@ -153,7 +157,17 @@ end
 #########
 
 def update_contact_info(contact, contact_info)
+  contact_info.delete_if { |item| !INPUT_FIELDS.include?(item) }
 
+  @contacts.map do |person|
+    if person['name'] == contact
+      person.replace(contact_info)
+    else
+      person
+    end
+  end
+
+  write_to_contacts_file(@contacts)
 end
 
 # Update: edit a contact
@@ -165,7 +179,7 @@ put '/contacts/:old_name' do
   if contact_info_valid?
 
     @contact_info = get_contact_details(@contact)
-    update_contact_info(@contact, @contact_info)
+    update_contact_info(@contact, params)
     session[:message] = "Updated contact info for #{@contact}"
 
     redirect "/contacts/#{@contact_info['name'].gsub(' ', '%20')}"

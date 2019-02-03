@@ -15,10 +15,10 @@ class AppTest < MiniTest::Test
     FileUtils.mkdir_p(data_path)
     contents = {"contacts"=>
                 [{"name"=>"Chris Uppen",
-                  "phone"=>"1234567890",
+                  "phone"=>"123 456-7890",
                   "email"=>"chris.uppen@mymail.com"},
                  {"name"=>"Christina Uppen",
-                  "phone"=>"2234567890",
+                  "phone"=>"223 456-7890",
                   "email"=>"christina.uppen@mymail.com"}]}
 
     create_document('contacts.yml',contents)
@@ -51,7 +51,7 @@ class AppTest < MiniTest::Test
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'Chris'
-    assert_includes last_response.body, '1234567890'
+    assert_includes last_response.body, '123 456-7890'
   end
 
   ## New
@@ -86,24 +86,29 @@ class AppTest < MiniTest::Test
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'Submit'
-    assert_includes last_response.body, '1234567890'
+    assert_includes last_response.body, '123 456-7890'
   end
 
   ## Update
   def test_contact_update_valid_name
-    put '/contacts/Chris%20Uppen', phone: '1234567891'
+    put '/contacts/Chris%20Uppen', {"name"=>"Chris Uppens",
+                                    "phone"=>"123 456-7890",
+                                    "email"=>"chris.uppen@mymail.com"}
 
     assert_equal 302, last_response.status
     assert_equal "Updated contact info for Chris Uppen", session[:message]
-    assert_includes last_response.body, '1234567891'
+
+    get last_response["Location"]
+    assert_includes last_response.body, "123 456-7890"
   end
 
   def test_contact_update_invalid_name_fails
-    skip
-    put '/contacts/Johnny', name: ''
+    put '/contacts/Chris%20Uppen', {"name"=>"",
+                                    "phone"=>"123 456-7890",
+                                    "email"=>"chris.uppen@mymail.com"}
 
     assert_equal 422, last_response.status
-    assert_includes last_response.body, "Invalid name"
+    assert_includes last_response.body, "First name must be valid name"
   end
 
   ## Delete

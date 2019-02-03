@@ -1,7 +1,8 @@
+---
 contacts:
- - name: 'Chris Uppen'
-   phone: '123 456-7890'
-   email: 'chris.uppen@mymail.com'
- - name: 'Christina Uppen'
-   phone: '223 456-7890'
-   email: 'christina.uppen@mymail.com'
+- name: Chris Uppen
+  phone: '1234567890'
+  email: chris.uppen@mymail.com
+- name: Christina Uppen
+  phone: '2234567890'
+  email: christina.uppen@mymail.com
