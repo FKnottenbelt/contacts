@@ -4,7 +4,7 @@ require 'sinatra/reloader'
 require 'fileutils'
 require 'bundler/setup'
 require 'pry'
-require "yaml"
+require 'yaml'
 
 configure do
   enable :sessions
@@ -18,10 +18,10 @@ before do
 end
 
 def data_path
-  if ENV["RACK_ENV"] == "test"
-    File.expand_path("../test/data", __FILE__)
+  if ENV['RACK_EN'] == 'test'
+    File.expand_path('../test/data', __FILE__)
   else
-    File.expand_path("../data", __FILE__)
+    File.expand_path('../data', __FILE__)
   end
 end
 
@@ -32,7 +32,7 @@ def load_contacts
 end
 
 def get_contact_details(contact)
-  @contacts.select{ |person| person['name'] == contact }.first
+  @contacts.select { |person| person['name'] == contact }.first
 end
 
 # def write_to_contacts_file(new_content)
@@ -124,7 +124,7 @@ get '/contacts/:name/edit' do
 end
 
 ####  Field validation
-INPUT_FIELDS = ['name', 'phone', 'email']
+INPUT_FIELDS = %w(name phone email).freeze
 
 def validate_contact_info(info)
   INPUT_FIELDS.each do |field|
@@ -138,22 +138,17 @@ def contact_info_valid?
 end
 
 def validate_name(name)
-  if (name.to_s.empty? || name.strip == '')
-    @error_stack << 'First name must be valid name'
-  end
+  @error_stack << 'First name must be valid name' if
+    name.to_s.empty? || name.strip == ''
 end
 
 def validate_phone(phone)
-  mask = "000 000-0000"
-  if phone.gsub(/\d/, '0') != mask
-    @error_stack << 'Invalid phone number'
-  end
+  mask = '000 000-0000'
+  @error_stack << 'Invalid phone number' if phone.gsub(/\d/, '0') != mask
 end
 
 def validate_email(email)
-  if (email =~ URI::MailTo::EMAIL_REGEXP).nil?
-    @error_stack << 'Invalid email'
-  end
+  @error_stack << 'Invalid email' if (email =~ URI::MailTo::EMAIL_REGEXP).nil?
 end
 #########
 
@@ -173,7 +168,7 @@ put '/contacts/:old_name' do
     update_contact_info(@contact, @contact_info)
     session[:message] = "Updated contact info for #{@contact}"
 
-    redirect "/contacts/#{@contact_info['name'].gsub(' ','%20')}"
+    redirect "/contacts/#{@contact_info['name'].gsub(' ', '%20')}"
   else
     @contact_info = params
     status 422
