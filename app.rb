@@ -14,6 +14,7 @@ end
 
 before do
   @contacts ||= load_contacts
+  @error_stack = []
 end
 
 def data_path
@@ -122,13 +123,39 @@ get '/contacts/:name/edit' do
   erb :edit
 end
 
-def validate_contact_info(info)
+####  Field validation
+INPUT_FIELDS = ['name', 'phone', 'email']
 
+def validate_contact_info(info)
+  INPUT_FIELDS.each do |field|
+    method = "validate_#{field}"
+    send(method, info[field])
+  end
 end
 
 def contact_info_valid?
-  !session[:message]
+  @error_stack.empty?
 end
+
+def validate_name(name)
+  if (name.to_s.empty? || name.strip == '')
+    @error_stack << 'First name must be valid name'
+  end
+end
+
+def validate_phone(phone)
+  mask = "000 000-0000"
+  if phone.gsub(/\d/, '0') != mask
+    @error_stack << 'Invalid phone number'
+  end
+end
+
+def validate_email(email)
+  if (email =~ URI::MailTo::EMAIL_REGEXP).nil?
+    @error_stack << 'Invalid email'
+  end
+end
+#########
 
 def update_contact_info(contact, contact_info)
 
@@ -141,15 +168,16 @@ put '/contacts/:old_name' do
   validate_contact_info(params)
 
   if contact_info_valid?
+
     @contact_info = get_contact_details(@contact)
     update_contact_info(@contact, @contact_info)
     session[:message] = "Updated contact info for #{@contact}"
 
     redirect "/contacts/#{@contact_info['name'].gsub(' ','%20')}"
   else
+    @contact_info = params
     status 422
-    session[:message] = 'Invalid name'
-    #@contact = params[:old_name]
+    session[:message] = @error_stack.join(', ')
 
     erb :edit
   end

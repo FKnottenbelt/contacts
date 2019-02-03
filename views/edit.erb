@@ -2,9 +2,9 @@
   <input name='_method' type='hidden' value='put'>
 
   <label for='name'>Name</label>
-  <input name='name' value='<%= @contact %>'><br><br>
+  <input name='name' value='<%= @contact_info['name'] %>'><br><br>
 
-  <label for='phone'>Phone</label>
+  <label for='phone' placeholder='000 000-0000'>Phone</label>
   <input name='phone' value="<%= @contact_info['phone'] %>"><br><br>
 
   <label for='email'>Email</label>
