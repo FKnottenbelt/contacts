@@ -60,21 +60,16 @@ def update_contact_info(contact, contact_info)
   write_to_contacts_file(@contacts)
 end
 
-# def determine_name(old_name, new_name)
-#   if name =~ /#{old_name}/
-#     name.gsub(old_name, new_name).strip
-#   else
-#     name
-#   end
-# end
+def delete_contact(name)
 
-# def delete_contact(name)
-#   edit_contact(name, "")
-# end
+  contacts_file = File.join(data_path, 'contacts.yml')
+  contacts = YAML.load_file(contacts_file)
+  contacts['contacts'].reject! { |person| person['name'] == name }
+
+  File.write(contacts_file, contacts.to_yaml, mode: 'w')
+end
 
 def add_contact(new_content)
-  # file = File.join(data_path, 'contacts.yml')
-  # File.write(file, "\n#{name}", mode:'a')
   new_content.delete_if { |item| !INPUT_FIELDS.include?(item) }
 
   contacts_file = File.join(data_path, 'contacts.yml')
@@ -157,14 +152,14 @@ put '/contacts/:old_name' do
 end
 
 # Delete: get page to delete contact
-# get '/contacts/:name/delete' do
-#   @contact = params[:name]
-#   erb :delete
-# end
+get '/contacts/:name/delete' do
+  @contact = params[:name]
+  erb :delete
+end
 
 # Destroy: delete contact
-# delete '/contacts/:name' do
-#   delete_contact(params[:name])
-#   session[:message] = "Deleted #{params[:name]}"
-#   redirect "/contacts"
-# end
+delete '/contacts/:name' do
+  delete_contact(params[:name])
+  session[:message] = "Deleted #{params[:name]}"
+  redirect "/contacts"
+end

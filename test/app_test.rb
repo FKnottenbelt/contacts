@@ -73,11 +73,13 @@ class AppTest < MiniTest::Test
   end
 
   def test_contact_create_invalid_contact_fails
-    skip
-    post '/contacts', name: 'Johnny'
+    post '/contacts', {"name"=>"",
+                       "phone"=>"333 456-7770",
+                       "email"=>"bchrisrofer.tempee@mymail.com"}
+
 
     assert_equal 422, last_response.status
-    assert_includes last_response.body, "Invalid name"
+    assert_includes last_response.body, "First name must be valid name"
   end
 
   ## Edit
@@ -113,8 +115,7 @@ class AppTest < MiniTest::Test
 
   ## Delete
   def test_contact_delete
-    skip
-    get '/contacts/Johnny/delete'
+    get '/contacts/Chris%20Uppen/delete'
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, 'Remove contact'
@@ -122,10 +123,9 @@ class AppTest < MiniTest::Test
 
   ## Destroy
   def test_contact_destroy
-    skip
-    delete '/contacts/Johnny'
+    delete '/contacts/Chris%20Uppen'
 
     assert_equal 302, last_response.status
-    assert_equal "Deleted Johnny", session[:message]
+    assert_equal "Deleted Chris Uppen", session[:message]
   end
 end

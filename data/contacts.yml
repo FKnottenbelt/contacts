@@ -6,7 +6,3 @@ contacts:
 - name: Christina Uppen
   phone: 223 456-7890
   email: christina.uppen@mymail.com
-- !ruby/hash:Sinatra::IndifferentHash
-  name: xae
-  phone: 111 111-1112
-  email: s@c.com
