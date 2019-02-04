@@ -8,5 +8,5 @@ contacts:
   email: christina.uppen@mymail.com
 - !ruby/hash:Sinatra::IndifferentHash
   name: asdf
-  phone: 111 111-1113
-  email: s@c.com
+  phone: 111 111-1112
+  email: a@s.com

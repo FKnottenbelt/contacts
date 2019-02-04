@@ -29,9 +29,13 @@ def data_path
   end
 end
 
-def load_contacts
+def load_contacts_file
   contacts_file = File.join(data_path, 'contacts.yml')
-  contacts = YAML.load_file(contacts_file)
+  YAML.load_file(contacts_file)
+end
+
+def load_contacts
+  contacts = load_contacts_file
   contacts['contacts']
 end
 
@@ -61,21 +65,19 @@ def update_contact_info(contact, contact_info)
 end
 
 def delete_contact(name)
-  contacts_file = File.join(data_path, 'contacts.yml')
-  contacts = YAML.load_file(contacts_file)
+  contacts = load_contacts_file
   contacts['contacts'].reject! { |person| person['name'] == name }
 
-  File.write(contacts_file, contacts.to_yaml, mode: 'w')
+  write_to_contacts_file(contacts['contacts'])
 end
 
 def add_contact(new_content)
   new_content.delete_if { |item| !INPUT_FIELDS.include?(item) }
 
-  contacts_file = File.join(data_path, 'contacts.yml')
-  contacts = YAML.load_file(contacts_file)
+  contacts = load_contacts_file
   contacts['contacts'] << new_content
 
-  File.write(contacts_file, contacts.to_yaml, mode: 'w')
+  write_to_contacts_file(contacts['contacts'])
 end
 
 # Index: Display all contacts
