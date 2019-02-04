@@ -61,7 +61,6 @@ def update_contact_info(contact, contact_info)
 end
 
 def delete_contact(name)
-
   contacts_file = File.join(data_path, 'contacts.yml')
   contacts = YAML.load_file(contacts_file)
   contacts['contacts'].reject! { |person| person['name'] == name }
@@ -160,5 +159,5 @@ end
 delete '/contacts/:name' do
   delete_contact(params[:name])
   session[:message] = "Deleted #{params[:name]}"
-  redirect "/"
+  redirect '/'
 end
