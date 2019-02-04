@@ -6,6 +6,8 @@ require 'bundler/setup'
 require 'pry'
 require 'yaml'
 
+require_relative './validations'
+
 INPUT_FIELDS = %w(name phone email).freeze
 
 configure do
@@ -44,10 +46,19 @@ def write_to_contacts_file(new_content)
   File.write(contacts_file, contacts.to_yaml, mode: 'w')
 end
 
-# def valid_name?(name)
-#   !(name.to_s.empty?  || @contacts.include?(name) ||
-#     @contacts.include?(name + "\n"))
-# end
+def update_contact_info(contact, contact_info)
+  contact_info.delete_if { |item| !INPUT_FIELDS.include?(item) }
+
+  @contacts.map do |person|
+    if person['name'] == contact
+      person.replace(contact_info)
+    else
+      person
+    end
+  end
+
+  write_to_contacts_file(@contacts)
+end
 
 # def determine_name(old_name, new_name)
 #   if name =~ /#{old_name}/
@@ -57,28 +68,21 @@ end
 #   end
 # end
 
-# def edit_contact(old_name, new_name) VERVANGEN
-#   contacts = load_contacts
-
-#   new_content = contacts.map do |name|
-#     if name =~ /#{old_name}/
-#       name.gsub(old_name, new_name).strip
-#     else
-#       name
-#     end
-#   end.join
-
-#   write_to_contacts_file(new_content)
-# end
-
 # def delete_contact(name)
 #   edit_contact(name, "")
 # end
 
-# def add_contact(name)
-#   file = File.join(data_path, 'contacts.yml')
-#   File.write(file, "\n#{name}", mode:'a')
-# end
+def add_contact(new_content)
+  # file = File.join(data_path, 'contacts.yml')
+  # File.write(file, "\n#{name}", mode:'a')
+  new_content.delete_if { |item| !INPUT_FIELDS.include?(item) }
+
+  contacts_file = File.join(data_path, 'contacts.yml')
+  contacts = YAML.load_file(contacts_file)
+  contacts['contacts'] << new_content
+
+  File.write(contacts_file, contacts.to_yaml, mode: 'w')
+end
 
 # Index: Display all contacts
 get '/' do
@@ -91,26 +95,28 @@ get '/contacts' do
 end
 
 # New: go to new contact page
-# get '/contacts/new' do
-#   erb :new
-# end
+get '/contacts/new' do
+  erb :new
+end
 
 # Create: add new contact
-# post '/contacts' do
-#   @new_contact = params[:name]
+post '/contacts' do
+  @new_contact = params[:name]
 
-#   if valid_name?(@new_contact)
-#     add_contact(@new_contact)
-#     session[:message] = "Added #{@new_contact}"
+  validate_contact_info(params)
 
-#     redirect "/contacts/#{@new_contact}"
-#   else
-#     status 422
-#     session[:message] = 'Invalid name'
-#     erb :new
-#   end
+  if contact_info_valid?
+    add_contact(params)
+    session[:message] = "Added #{@new_contact}"
 
-# end
+    redirect "/contacts/#{@new_contact}"
+  else
+    @contact_info = params
+    status 422
+    session[:message] = @error_stack.join(', ')
+    erb :new
+  end
+end
 
 # Show: show individual contact
 get '/contacts/:name' do
@@ -126,48 +132,6 @@ get '/contacts/:name/edit' do
   @contact_info = get_contact_details(@contact)
 
   erb :edit
-end
-
-####  Field validation
-
-def validate_contact_info(info)
-  INPUT_FIELDS.each do |field|
-    method = "validate_#{field}"
-    send(method, info[field])
-  end
-end
-
-def contact_info_valid?
-  @error_stack.empty?
-end
-
-def validate_name(name)
-  @error_stack << 'First name must be valid name' if
-    name.to_s.empty? || name.strip == ''
-end
-
-def validate_phone(phone)
-  mask = '000 000-0000'
-  @error_stack << 'Invalid phone number' if phone.gsub(/\d/, '0') != mask
-end
-
-def validate_email(email)
-  @error_stack << 'Invalid email' if (email =~ URI::MailTo::EMAIL_REGEXP).nil?
-end
-#########
-
-def update_contact_info(contact, contact_info)
-  contact_info.delete_if { |item| !INPUT_FIELDS.include?(item) }
-
-  @contacts.map do |person|
-    if person['name'] == contact
-      person.replace(contact_info)
-    else
-      person
-    end
-  end
-
-  write_to_contacts_file(@contacts)
 end
 
 # Update: edit a contact

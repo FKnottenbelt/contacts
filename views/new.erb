@@ -1,6 +1,13 @@
 <form action='/contacts' method='post'>
   <label for='name'>Name</label>
-  <input name='name' value='<%= @new_contact %>'>
+  <input name='name' value=''><br><br>
+
+  <label for='phone' placeholder='000 000-0000'>Phone</label>
+  <input name='phone' value=""><br><br>
+
+  <label for='email'>Email</label>
+  <input name='email' value=""><br><br>
+
   <button type='submit' name='submit'>Submit</button>
 </form>
 

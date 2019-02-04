@@ -56,7 +56,6 @@ class AppTest < MiniTest::Test
 
   ## New
   def test_contact_new
-    skip
     get '/contacts/new'
 
     assert_equal 200, last_response.status
@@ -65,11 +64,12 @@ class AppTest < MiniTest::Test
 
   ## Create
   def test_contact_create_valid_contact
-    skip
-    post '/contacts', name: 'Carl'
+    post '/contacts', {"name"=>"Bchristofer Tempee",
+                       "phone"=>"333 456-7770",
+                       "email"=>"bchrisrofer.tempee@mymail.com"}
 
     assert_equal 302, last_response.status
-    assert_equal "Added Carl", session[:message]
+    assert_equal "Added Bchristofer Tempee", session[:message]
   end
 
   def test_contact_create_invalid_contact_fails
