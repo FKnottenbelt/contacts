@@ -18,7 +18,8 @@ end
 
 def validate_phone(phone)
   mask = '000 000-0000'
-  @error_stack << 'Invalid phone number' if phone.gsub(/\d/, '0') != mask
+  @error_stack << 'Invalid phone number (format: 111 222-3333)' if
+    phone.gsub(/\d/, '0') != mask
 end
 
 def validate_email(email)

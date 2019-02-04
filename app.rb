@@ -81,7 +81,6 @@ end
 
 # Index: Display all contacts
 get '/' do
-  session.clear
   erb :index
 end
 
@@ -161,5 +160,5 @@ end
 delete '/contacts/:name' do
   delete_contact(params[:name])
   session[:message] = "Deleted #{params[:name]}"
-  redirect "/contacts"
+  redirect "/"
 end
