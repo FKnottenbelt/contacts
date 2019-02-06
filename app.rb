@@ -8,7 +8,7 @@ require 'yaml'
 
 require_relative './validations'
 
-INPUT_FIELDS = %w(name phone email).freeze
+INPUT_FIELDS = %w[name phone email].freeze
 
 configure do
   enable :sessions
