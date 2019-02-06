@@ -22,7 +22,3 @@ user
 
 yaml
 https://github.com/Animosity/CraftIRC/wiki/Complete-idiot's-introduction-to-yaml
-
-issues:
-- show: non existing name works when it shouldn't
--
